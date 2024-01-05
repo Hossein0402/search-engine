@@ -32,7 +32,9 @@ public class Main {
                 writer.write(String.valueOf(line));
                 writer.close();
                 index++;
+                System.out.println(index);
             }
         }
+
     }
 }

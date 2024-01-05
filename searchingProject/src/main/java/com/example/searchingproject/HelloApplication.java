@@ -9,13 +9,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.*;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.util.*;
 
 public class HelloApplication extends Application {
-    public static HashMap<String, ArrayList<Integer>> searches = new HashMap<>();
+    public static HashMap<String, HashSet<Integer>> searches = new HashMap<>();
     public static HashMap<Integer, String> texts = new HashMap<>();
 
     @Override
@@ -30,19 +27,29 @@ public class HelloApplication extends Application {
     }
 
     public static void makeMap() throws ClassNotFoundException, SQLException, FileNotFoundException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/search_engine", "root", "1080682805fghFGH@#");
-        String sql = "SELECT * FROM map";
-        Statement statement = connection.prepareStatement(sql);
-        ResultSet rs = statement.executeQuery(sql);
-        while (rs.next()) {
-            String text = rs.getString("Texts");
-            String[] texts = text.split("\\s");
-            ArrayList<Integer> integers = new ArrayList<>();
-            for (int i = 0; i < texts.length; i++) {
-                integers.add(Integer.valueOf(texts[i]));
+        File file1 = new File("C:\\Users\\dd\\Documents\\GitHub\\search-engine-Hossein0402\\text\\EditedText");
+        File[] list = file1.listFiles();
+        int index = 1;
+        for (File fie : list) {
+            Scanner scanner = new Scanner(fie);
+            while (scanner.hasNextLine()) {
+                String input = scanner.nextLine();
+                String[] words = input.split("\\s+");
+                for (String word : words) {
+                    if (word.length() > 1) {
+                        int name = Integer.parseInt(fie.getName().replaceFirst("[.][^.]+$", ""));
+                        word = word.toUpperCase();
+                        if (searches.get(word) != null)
+                            searches.get(word).add(name);
+                        else {
+                            HashSet<Integer> newArray = new HashSet<>();
+                            newArray.add(name);
+                            searches.put(word, newArray);
+                        }
+                    }
+                }
             }
-            searches.put(rs.getString("Word"), integers);
+            index++;
         }
         File file = new File("C:\\Users\\dd\\Documents\\GitHub\\search-engine-Hossein0402\\text\\txtFile");
         File[] allFiles = file.listFiles();
