@@ -46,7 +46,7 @@ public class SearchedController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        makeFree();
+      //  makeFree();
         makeSearch();
     }
 
@@ -58,6 +58,9 @@ public class SearchedController implements Initializable {
     }
 
     public void makeSearch() {
+        for (Node node : vBox.getChildren()){
+            vBox.getChildren().remove(node);
+        }
         for (int i = 0; i < areas.size(); i++) {
             TextArea textArea = new TextArea(HelloApplication.texts.get(areas.get(i)));
             textArea.setMinWidth(Region.USE_COMPUTED_SIZE);

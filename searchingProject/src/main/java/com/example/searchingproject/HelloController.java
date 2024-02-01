@@ -32,8 +32,8 @@ public class HelloController implements Initializable {
             makeTextNumbers(searchText.getText());
             FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("searched.fxml"));
             try {
-                Scene scene = new Scene(fxmlLoader.load(),742,629);
-                Stage stage = (Stage)(this.searchText.getScene().getWindow());
+                Scene scene = new Scene(fxmlLoader.load(), 742, 629);
+                Stage stage = (Stage) (this.searchText.getScene().getWindow());
                 stage.setResizable(false);
                 stage.setScene(scene);
                 stage.show();
@@ -49,6 +49,7 @@ public class HelloController implements Initializable {
         HashSet<Integer> should = new HashSet<>();
         HashSet<Integer> plus = new HashSet<>();
         HashSet<Integer> minus = new HashSet<>();
+        boolean check = true;
         for (int i = 0; i < splitTexts.length; i++) {
             if (splitTexts[i].charAt(0) == '+') {
                 splitTexts[i] = splitTexts[i].toUpperCase();
@@ -61,11 +62,22 @@ public class HelloController implements Initializable {
                 minus.addAll(HelloApplication.searches.get(splitTexts[i].replace("-", "")));
             } else {
                 splitTexts[i] = splitTexts[i].toUpperCase();
-                should.addAll(HelloApplication.searches.get(splitTexts[i]));
+                if (check) {
+                    should.addAll(HelloApplication.searches.get(splitTexts[i]));
+                    check = false;
+                }
+                should.retainAll(HelloApplication.searches.get(splitTexts[i]));
+            }
+        }
+        if (should.size() == 0)
+            should.addAll(plus);
+        else {
+            for (Integer x : plus) {
+                if (!plus.contains(x))
+                    should.remove(x);
             }
         }
         should.removeAll(minus);
-        should.addAll(plus);
         textNumbers.addAll(should);
         SearchedController.areas.addAll(textNumbers);
     }
